@@ -20,7 +20,6 @@ public class Candidate {
     private Long id;
 
 
-    // ID venant de Keycloak
     @Column(nullable = false, unique = true)
     private String keycloakId;
 
@@ -51,11 +50,4 @@ public class Candidate {
 
 
 
-    @OneToOne(
-            mappedBy = "candidate",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private CV cv;
 }

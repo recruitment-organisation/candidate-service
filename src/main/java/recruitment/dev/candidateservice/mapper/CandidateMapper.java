@@ -9,8 +9,7 @@ import recruitment.dev.candidateservice.entities.Candidate;
 
 
 @Mapper(
-        componentModel = "spring",
-        uses = CVMapper.class
+        componentModel = "spring"
 )
 public interface CandidateMapper {
 
@@ -26,7 +25,6 @@ public interface CandidateMapper {
     @Mapping(source = "available", target = "available")
     @Mapping(source = "linkedinUrl", target = "linkedinUrl")
     @Mapping(source = "githubUrl", target = "githubUrl")
-    @Mapping(source = "cv", target = "cv")
     CandidateDto toDto(Candidate candidate);
 
 
@@ -41,7 +39,6 @@ public interface CandidateMapper {
     @Mapping(source = "available", target = "available")
     @Mapping(source = "linkedinUrl", target = "linkedinUrl")
     @Mapping(source = "githubUrl", target = "githubUrl")
-    @Mapping(source = "cv", target = "cv")
     Candidate toEntity(CandidateDto dto);
 
 }

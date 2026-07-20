@@ -62,5 +62,4 @@ public class CandidateDto {
     private String githubUrl;
 
 
-    private CVDto cv;
 }
