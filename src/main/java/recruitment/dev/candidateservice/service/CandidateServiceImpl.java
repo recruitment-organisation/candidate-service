@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import recruitment.dev.candidateservice.dto.CandidateDto;
 import recruitment.dev.candidateservice.entities.Candidate;
+import recruitment.dev.candidateservice.exception.CandidateNotFoundException;
 import recruitment.dev.candidateservice.mapper.CandidateMapper;
 import recruitment.dev.candidateservice.repositories.CandidateRepository;
 
@@ -42,13 +43,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public CandidateDto update(Long id, CandidateDto dto) {
-
-
-        Candidate candidate =
-                candidateRepository.findById(id)
-                        .orElseThrow(
-                                () -> new RuntimeException("Candidate not found")
-                        );
+        Candidate candidate = getCandidateById(id);
 
 
         candidate.setFirstName(dto.getFirstName());
@@ -71,16 +66,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     @Transactional(readOnly = true)
     public CandidateDto findById(Long id) {
-
-
-        Candidate candidate =
-                candidateRepository.findById(id)
-                        .orElseThrow(
-                                () -> new RuntimeException("Candidate not found")
-                        );
-
-
-        return candidateMapper.toDto(candidate);
+        return candidateMapper.toDto(getCandidateById(id));
     }
 
 
@@ -88,16 +74,11 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public CandidateDto findByKeycloakId(String keycloakId) {
+        Candidate candidate = candidateRepository.findByKeycloakId(keycloakId);
 
-
-        Candidate candidate =
-                candidateRepository
-                        .findByKeycloakId(keycloakId)
-                        ;
         if (candidate == null) {
-            throw new RuntimeException("Candidate not found");
+            throw new CandidateNotFoundException(keycloakId);
         }
-
 
         return candidateMapper.toDto(candidate);
     }
@@ -121,14 +102,12 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public void delete(Long id) {
-
-
-        candidateRepository.deleteById(id);
-
+        candidateRepository.delete(getCandidateById(id));
     }
 
-    private boolean isCandidateExists(Long id) {
-        return candidateRepository.existsById(id);
+    private Candidate getCandidateById(Long id) {
+        return candidateRepository.findById(id)
+                .orElseThrow(() -> new CandidateNotFoundException(id));
     }
 
 }

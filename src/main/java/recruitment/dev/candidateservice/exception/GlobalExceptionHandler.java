@@ -12,6 +12,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(CandidateNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCandidateNotFound(
+            CandidateNotFoundException exception
+    ) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidation(
             MethodArgumentNotValidException ex) {
