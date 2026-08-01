@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import recruitment.dev.candidateservice.dto.CandidateDto;
-import recruitment.dev.candidateservice.repositories.CandidateRepository;
 import recruitment.dev.candidateservice.service.CandidateService;
 
 @RestController
@@ -25,12 +26,28 @@ public class CandidateController {
     }
 
 
-    @PreAuthorize("hasRole('CANDIDATE')")
+    @PreAuthorize("hasRole('HR')")
     @PutMapping("/update/{id}")
     public ResponseEntity <CandidateDto> updateCandidate( @PathVariable Long id,
                                                           @Valid @RequestBody CandidateDto dto) {
         CandidateDto candidateDto = candidateService.update(id, dto);
         return ResponseEntity.ok(candidateDto);
+    }
+
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @GetMapping("/me")
+    public ResponseEntity<CandidateDto> getCurrentCandidate(
+            @AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(candidateService.findByKeycloakId(jwt.getSubject()));
+    }
+
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @PutMapping("/me")
+    public ResponseEntity<CandidateDto> updateCurrentCandidate(
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid @RequestBody CandidateDto dto) {
+        CandidateDto current = candidateService.findByKeycloakId(jwt.getSubject());
+        return ResponseEntity.ok(candidateService.update(current.getId(), dto));
     }
     @PreAuthorize("hasRole('HR')")
     @DeleteMapping("/delete/{id}")
