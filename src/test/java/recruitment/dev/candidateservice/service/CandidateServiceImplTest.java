@@ -1,5 +1,6 @@
 package recruitment.dev.candidateservice.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,16 +23,18 @@ class CandidateServiceImplTest {
 
     @Mock private CandidateRepository candidateRepository;
     @Mock private CandidateMapper candidateMapper;
+    @Mock private ObjectMapper objectMapper;
     @InjectMocks private CandidateServiceImpl service;
 
     @Test
-    void createsCandidateThroughMapperAndRepository() {
+    void createsCandidateThroughMapperAndRepository() throws Exception {
         CandidateDto request = dto();
         Candidate candidate = new Candidate();
         CandidateDto expected = dto();
         when(candidateMapper.toEntity(request)).thenReturn(candidate);
         when(candidateRepository.save(candidate)).thenReturn(candidate);
         when(candidateMapper.toDto(candidate)).thenReturn(expected);
+        when(objectMapper.writeValueAsString(any())).thenReturn("{}");
 
         assertThat(service.create(request)).isSameAs(expected);
         verify(candidateRepository).save(candidate);

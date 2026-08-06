@@ -55,22 +55,20 @@ public class CandidateController {
         candidateService.delete(id);
         return ResponseEntity.noContent().build(); // 204
     }
-    @PreAuthorize("hasRole('HR')")
     @GetMapping("/get/{id}")
     public ResponseEntity <CandidateDto> findCandidateById(@PathVariable Long id) {
         CandidateDto candidateDto = candidateService.findById(id);
         return ResponseEntity.ok(candidateDto);
     }
-    @PreAuthorize("hasRole('HR')")
     @GetMapping("/getkeycloakId")
+    @PreAuthorize("hasAnyRole('HR', 'MANAGER')")
 
     public ResponseEntity <CandidateDto> findCandidateByKeycloakId(@RequestParam String keycloakId) {
         CandidateDto candidateDto = candidateService.findByKeycloakId(keycloakId);
         return ResponseEntity.ok(candidateDto);
     }
-    @PreAuthorize("hasRole('HR')")
-
     @GetMapping("/get-all")
+    @PreAuthorize("hasAnyRole('HR', 'MANAGER')")
 
     public ResponseEntity<Page<CandidateDto>> findAllCandidates(  @RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "10") int size) {
