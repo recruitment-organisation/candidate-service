@@ -34,8 +34,6 @@ class CandidateServiceImplTest {
         when(candidateMapper.toEntity(request)).thenReturn(candidate);
         when(candidateRepository.save(candidate)).thenReturn(candidate);
         when(candidateMapper.toDto(candidate)).thenReturn(expected);
-        when(objectMapper.writeValueAsString(any())).thenReturn("{}");
-
         assertThat(service.create(request)).isSameAs(expected);
         verify(candidateRepository).save(candidate);
     }
