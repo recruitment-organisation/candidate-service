@@ -54,10 +54,12 @@ public class CandidateDto {
     private Boolean available;
 
     @URL(message = "URL LinkedIn invalide")
+    @Size(max = 255, message = "L'URL LinkedIn ne doit pas dépasser 255 caractères")
 
     private String linkedinUrl;
 
     @URL(message = "URL GitHub invalide")
+    @Size(max = 255, message = "L'URL GitHub ne doit pas dépasser 255 caractères")
 
     private String githubUrl;
 
